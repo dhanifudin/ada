@@ -51,9 +51,15 @@ python -m agent.main
 
 You should see log lines like:
 ```
-ada agent starting: detector=neigh_table interval=30s timeout=120s
+ada agent starting: detector=neigh_table schema=dosen4 interval=30s timeout=120s
 scan: 4 detected, 4 active
 ```
+
+The agent talks to a dedicated **`dosen4`** Postgres schema (not `public`)
+— see `../rdosen4/supabase/schema.sql`. That schema must also be added to
+Supabase Dashboard → Project Settings → API → "Exposed schemas", or the
+`report_presence` RPC call will 404. `SUPABASE_SCHEMA` in `.env` defaults
+to `dosen4` and normally doesn't need changing.
 
 ### Running as a service
 

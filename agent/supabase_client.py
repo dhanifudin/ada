@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 
 from supabase import Client, create_client
+from supabase.lib.client_options import SyncClientOptions
 
 
 class PresenceReporter:
@@ -11,8 +12,15 @@ class PresenceReporter:
     that protect the anon key used by the web frontend.
     """
 
-    def __init__(self, url: str, service_key: str, agent_id: str, absence_timeout: int):
-        self._client: Client = create_client(url, service_key)
+    def __init__(
+        self, url: str, service_key: str, agent_id: str, absence_timeout: int,
+        schema: str = 'dosen4',
+    ):
+        # All attendance objects live in the `dosen4` schema (not `public`)
+        # -- see rdosen4/supabase/schema.sql -- so the client must target it.
+        self._client: Client = create_client(
+            url, service_key, options=SyncClientOptions(schema=schema)
+        )
         self.agent_id = agent_id
         self.absence_timeout = absence_timeout
 

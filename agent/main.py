@@ -46,11 +46,12 @@ def main() -> None:
         service_key=cfg.supabase_service_key,
         agent_id=cfg.agent_id,
         absence_timeout=cfg.presence_timeout,
+        schema=cfg.supabase_schema,
     )
 
     logger.info(
-        'ada agent starting: detector=%s interval=%ss timeout=%ss',
-        cfg.detector, cfg.scan_interval, cfg.presence_timeout,
+        'ada agent starting: detector=%s schema=%s interval=%ss timeout=%ss',
+        cfg.detector, cfg.supabase_schema, cfg.scan_interval, cfg.presence_timeout,
     )
 
     while True:

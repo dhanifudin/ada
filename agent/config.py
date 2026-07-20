@@ -22,6 +22,7 @@ def _env_bool(name: str, default: bool) -> bool:
 class Config:
     supabase_url: str
     supabase_service_key: str
+    supabase_schema: str
     agent_id: str
     detector: str
     scan_interval: int
@@ -41,6 +42,7 @@ def load_config() -> Config:
     return Config(
         supabase_url=url,
         supabase_service_key=key,
+        supabase_schema=os.getenv('SUPABASE_SCHEMA', 'dosen4'),
         agent_id=os.getenv('AGENT_ID', 'ada-agent'),
         detector=os.getenv('DETECTOR', 'neigh_table'),
         scan_interval=_env_int('SCAN_INTERVAL', 30),
