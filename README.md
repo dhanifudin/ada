@@ -51,7 +51,7 @@ python -m agent.main
 
 You should see log lines like:
 ```
-ada agent starting: detector=neigh_table schema=dosen4 interval=30s timeout=120s
+ada agent starting: detector=neigh_table schema=dosen4 interval=30s timeout=600s
 scan: 4 detected, 4 active
 ```
 
