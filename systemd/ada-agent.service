@@ -1,0 +1,25 @@
+[Unit]
+Description=ADA WiFi presence detection agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/ada
+EnvironmentFile=/opt/ada/.env
+ExecStart=/opt/ada/.venv/bin/python -m agent.main
+Restart=on-failure
+RestartSec=5
+
+# DETECTOR=neigh_table (default) needs no elevated privileges, so this
+# service can run as an unprivileged user:
+# User=ada
+# Group=ada
+#
+# DETECTOR=arp_scan needs raw sockets. Prefer granting the capability to
+# the binary once (keeps the agent process itself unprivileged):
+#   sudo setcap cap_net_raw+ep $(which arp-scan)
+# rather than running this whole unit as root.
+
+[Install]
+WantedBy=multi-user.target
