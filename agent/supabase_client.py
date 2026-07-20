@@ -32,3 +32,24 @@ class PresenceReporter:
             'agent_id': self.agent_id,
             'absence_timeout_seconds': self.absence_timeout,
         }).execute()
+
+    def observe_detection(self, macs: set[str]) -> tuple[bool, float]:
+        """Report the current raw scan to the device-registration detection-window
+        RPC. A no-op server-side when no registration window is open. Returns
+        (window_open, seconds_remaining) so the caller can decide how soon to
+        scan again without a second round-trip.
+        """
+        resp = self._client.rpc('observe_macs_for_detection', {'p_macs': sorted(macs)}).execute()
+        rows = resp.data or []
+        if not rows:
+            return False, 0.0
+        row = rows[0]
+        return bool(row.get('window_open')), float(row.get('seconds_remaining') or 0.0)
+
+    def is_detection_window_open(self) -> bool:
+        """Cheap, scan-free probe -- no network scan involved -- so the agent
+        can poll frequently during its idle cadence without the cost of a
+        full scan, to notice a newly-opened registration window sooner.
+        """
+        resp = self._client.rpc('is_detection_window_open', {}).execute()
+        return bool(resp.data)
